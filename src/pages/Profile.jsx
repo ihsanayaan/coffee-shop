@@ -1,0 +1,271 @@
+import React, { useState } from 'react';
+import { FiUser, FiEdit, FiSave, FiClock, FiMapPin, FiMail, FiPhone, FiLock, FiAward } from 'react-icons/fi';
+import { FaCoffee } from 'react-icons/fa';
+
+const Profile = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPreferences, setIsEditingPreferences] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+
+  const [userData, setUserData] = useState({
+    name: 'Coffee Lover',
+    email: 'user@brewbean.com',
+    phone: '+92 3444947537',
+    address: 'Tighak Kabal Swat',
+    password: ''
+  });
+
+  const [preferences, setPreferences] = useState({
+    favoriteDrink: 'Latte',
+    milkType: 'Oat Milk',
+    sugarLevel: 'Medium',
+    cupSize: 'Large',
+    loyaltyPoints: 1250
+  });
+
+  const [orders] = useState([
+    { id: 1001, date: '2023-06-15', items: ['Latte', 'Cappuccino'], total: 650, status: 'Delivered' },
+    { id: 1002, date: '2023-06-10', items: ['Cold Brew', 'Croissant'], total: 420, status: 'Delivered' },
+    { id: 1003, date: '2023-06-05', items: ['Caramel Macchiato'], total: 380, status: 'Cancelled' }
+  ]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePreferenceChange = (e) => {
+    const { name, value } = e.target;
+    setPreferences(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSave = () => {
+    setIsEditing(false);
+    // API call to save profile would go here
+  };
+
+  const handleSavePreferences = () => {
+    setIsEditingPreferences(false);
+    // API call to save preferences would go here
+  };
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // You might want to persist this in localStorage
+  };
+
+  return (
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-amber-500 flex items-center">
+            <FiUser className="mr-2" /> My Profile
+          </h2>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={toggleDarkMode}
+              className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
+            >
+              {darkMode ? '☀️' : '🌙'}
+            </button>
+            <button
+              onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+              className="flex items-center bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors"
+            >
+              {isEditing ? <FiSave className="mr-1" /> : <FiEdit className="mr-1" />}
+              {isEditing ? 'Save Profile' : 'Edit Profile'}
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Personal Information */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className={`rounded-lg shadow-md p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-6">
+                <div className="relative">
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-amber-500">
+                    {profileImage ? (
+                      <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className={`w-full h-full flex items-center justify-center ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                        <FiUser className="text-3xl text-amber-500" />
+                      </div>
+                    )}
+                  </div>
+                  {isEditing && (
+                    <label className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs px-2 py-1 rounded-full cursor-pointer hover:bg-amber-600">
+                      Upload
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-amber-500">{userData.name}</h3>
+                  <div className="flex items-center mt-2">
+                    <FiAward className="text-amber-400 mr-1" />
+                    <span className="text-sm">{preferences.loyaltyPoints} Loyalty Points</span>
+                  </div>
+                  <div className="flex items-center mt-1">
+                    <FaCoffee className="text-amber-400 mr-1" />
+                    <span className="text-sm">Gold Member</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {/* Editable fields same as before */}
+                <div>
+                  <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Full Name</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="name"
+                      value={userData.name}
+                      onChange={handleInputChange}
+                      className={`w-full p-2 rounded focus:ring-2 focus:ring-amber-500 focus:outline-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-amber-200'}`}
+                    />
+                  ) : (
+                    <p className={darkMode ? 'text-gray-100' : 'text-gray-800'}>{userData.name}</p>
+                  )}
+                </div>
+
+                {/* Other fields (email, phone, address) with dark mode support */}
+                {/* ... */}
+
+                {isEditing && (
+                  <div className="flex items-center">
+                    <FiLock className={`mr-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                    <div className="flex-grow">
+                      <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Change Password</label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={userData.password}
+                        onChange={handleInputChange}
+                        className={`w-full p-2 rounded focus:ring-2 focus:ring-amber-500 focus:outline-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-amber-200'}`}
+                        placeholder="Enter new password"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Order History (with dark mode support) */}
+            <div className={`rounded-lg shadow-md p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <h3 className="text-lg font-bold text-amber-500 mb-4 flex items-center">
+                <FiClock className="mr-2" /> Order History
+              </h3>
+              {/* Order list implementation */}
+            </div>
+          </div>
+
+          {/* Preferences (Updated with editing) */}
+          <div className={`rounded-lg shadow-md p-6 h-fit sticky top-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-amber-500">Coffee Preferences</h3>
+              <button
+                onClick={() => isEditingPreferences ? handleSavePreferences() : setIsEditingPreferences(true)}
+                className="text-sm bg-amber-100 text-amber-900 px-3 py-1 rounded-full hover:bg-amber-200"
+              >
+                {isEditingPreferences ? 'Save' : 'Edit'}
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {isEditingPreferences ? (
+                <>
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Favorite Drink</label>
+                    <select
+                      name="favoriteDrink"
+                      value={preferences.favoriteDrink}
+                      onChange={handlePreferenceChange}
+                      className={`w-full p-2 rounded focus:ring-2 focus:ring-amber-500 focus:outline-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-amber-200'}`}
+                    >
+                      <option value="Latte">Latte</option>
+                      <option value="Cappuccino">Cappuccino</option>
+                      <option value="Espresso">Espresso</option>
+                      <option value="Americano">Americano</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Milk Type</label>
+                    <select
+                      name="milkType"
+                      value={preferences.milkType}
+                      onChange={handlePreferenceChange}
+                      className={`w-full p-2 rounded focus:ring-2 focus:ring-amber-500 focus:outline-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-amber-200'}`}
+                    >
+                      <option value="Regular Milk">Regular Milk</option>
+                      <option value="Oat Milk">Oat Milk</option>
+                      <option value="Almond Milk">Almond Milk</option>
+                      <option value="Soy Milk">Soy Milk</option>
+                    </select>
+                  </div>
+
+                  {/* Other editable preference fields */}
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Favorite Drink</label>
+                    <p className={darkMode ? 'text-gray-100' : 'text-gray-800'}>{preferences.favoriteDrink}</p>
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Milk Preference</label>
+                    <p className={darkMode ? 'text-gray-100' : 'text-gray-800'}>{preferences.milkType}</p>
+                  </div>
+                  {/* Other non-editable preference fields */}
+                </>
+              )}
+
+              {/* Loyalty Points (non-editable) */}
+              <div className={`mt-6 p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-amber-50'}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <FiAward className="text-amber-500 mr-2" />
+                    <span className="font-medium">Loyalty Points</span>
+                  </div>
+                  <span className="font-bold text-amber-600">{preferences.loyaltyPoints}</span>
+                </div>
+                <div className="mt-2">
+                  <div className={`h-2 rounded-full ${darkMode ? 'bg-gray-600' : 'bg-amber-200'}`}>
+                    <div 
+                      className="h-full rounded-full bg-amber-500" 
+                      style={{ width: `${Math.min(100, (preferences.loyaltyPoints / 1500) * 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs mt-1 text-right">
+                    {1500 - preferences.loyaltyPoints} points to next reward
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Profile;
