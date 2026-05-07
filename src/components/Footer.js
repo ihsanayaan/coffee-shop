@@ -58,7 +58,7 @@ const Footer = () => {
                 <span dir="ltr">+92 3444947537</span>
               </div>
               <div className="flex ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4 mt-4">
-                <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
+        <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
                   <FaCcVisa />
                 </button>
                 <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
@@ -71,7 +71,6 @@ const Footer = () => {
             </div>
           </div>
         </div>
-
         {/* Copyright */}
         <div className="border-t border-amber-800 mt-8 pt-6 text-center text-amber-200">
           <p>&copy; {new Date().getFullYear()} {t('brandName')}. {t('allRights')}</p>
