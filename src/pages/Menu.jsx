@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiCoffee, FiSearch } from 'react-icons/fi';
+import { FiCoffee, FiSearch , FiStar, FiStar, FiMinus, FiPlus} from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
