@@ -58,15 +58,15 @@ const Footer = () => {
                 <span dir="ltr">+92 3444947537</span>
               </div>
               <div className="flex ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4 mt-4">
-                <a href="#" className="text-2xl hover:text-white transition-colors">
+                <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
                   <FaCcVisa />
-                </a>
-                <a href="#" className="text-2xl hover:text-white transition-colors">
+                </button>
+                <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
                   <FaCcMastercard />
-                </a>
-                <a href="#" className="text-2xl hover:text-white transition-colors">
+                </button>
+                <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
                   <FaCcPaypal />
-                </a>
+                </button>
               </div>
             </div>
           </div>
