@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiCoffee, FiSearch , FiStar, FiStar, FiMinus, FiPlus} from 'react-icons/fi';
+import { FiCoffee, FiSearch, FiStar, FiMinus, FiPlus } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
@@ -42,17 +42,16 @@ const Menu = ({ addToCart }) => {
   const [activeCategory, setActiveCategory] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter items based on search query
   const filteredItems = menuCategories
-  .find(cat => cat.id === activeCategory)
-  ?.items.filter(item =>
+   .find(cat => cat.id === activeCategory)
+   ?.items.filter(item =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase())
     ) || [];
 
   const handleQuantityChange = (itemId, change) => {
     setQuantities(prev => ({
-    ...prev,
+     ...prev,
       [itemId]: Math.max(0, (prev[itemId] || 0) + change)
     }));
   };
@@ -71,7 +70,6 @@ const Menu = ({ addToCart }) => {
           {t('ourMenu')}
         </h2>
 
-        {/* Search Bar */}
         <div className="relative w-full md:w-64">
           <FiSearch className="absolute ltr:left-3 rtl:right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
@@ -84,7 +82,6 @@ const Menu = ({ addToCart }) => {
         </div>
       </div>
 
-      {/* Category Tabs */}
       <div className="flex overflow-x-auto pb-4 mb-6 scrollbar-hide">
         <div className="flex ltr:space-x-2 rtl:space-x-reverse rtl:space-x-2">
           {menuCategories.map(category => (
@@ -96,7 +93,7 @@ const Menu = ({ addToCart }) => {
               }}
               className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
                 activeCategory === category.id
-                ? 'bg-amber-900 text-white'
+                 ? 'bg-amber-900 text-white'
                   : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
               }`}
             >
@@ -106,7 +103,6 @@ const Menu = ({ addToCart }) => {
         </div>
       </div>
 
-      {/* Menu Items */}
       {filteredItems.length > 0? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map(item => (
@@ -116,7 +112,6 @@ const Menu = ({ addToCart }) => {
                 item.isPopular? 'ltr:border-l-4 rtl:border-r-4 border-amber-500' : ''
               }`}
             >
-              {/* Popular Tag */}
               {item.isPopular && (
                 <div className="absolute top-0 ltr:right-2 rtl:left-2 bg-amber-100 text-amber-900 px-2 py-1 rounded-full text-xs flex items-center z-10">
                   <FiStar className="ltr:mr-1 rtl:ml-1" /> {t('popular')}
@@ -124,7 +119,6 @@ const Menu = ({ addToCart }) => {
               )}
 
               <div className="p-5 flex-grow flex flex-col">
-                {/* Item Info */}
                 <div className="flex justify-between items-start">
                   <div className="flex-grow ltr:pr-2 rtl:pl-2">
                     <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
@@ -137,7 +131,6 @@ const Menu = ({ addToCart }) => {
                   </span>
                 </div>
 
-                {/* Rating */}
                 <div className="flex justify-center my-4">
                   <div className="flex items-center bg-amber-50 px-3 py-1 rounded-full">
                     <div className="flex text-amber-400 ltr:mr-2 rtl:ml-2">
@@ -146,7 +139,7 @@ const Menu = ({ addToCart }) => {
                           key={i}
                           className={`${
                             i < Math.floor(item.rating)
-                            ? 'fill-current'
+                             ? 'fill-current'
                               : 'stroke-current'
                           } ${i < item.rating? 'text-amber-400' : 'text-gray-300'}`}
                           size={14}
@@ -159,7 +152,6 @@ const Menu = ({ addToCart }) => {
                   </div>
                 </div>
 
-                {/* Quantity Controls */}
                 <div className="mt-auto">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center border border-amber-200 rounded-full">
