@@ -58,17 +58,15 @@ const Footer = () => {
                 <span dir="ltr">+92 3444947537</span>
               </div>
               <div className="flex ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4 mt-4">
-                <div className="flex ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4 mt-4">
-  <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
-    <FaCcVisa />
-  </button>
-  <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
-    <FaCcMastercard />
-  </button>
-  <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
-    <FaCcPaypal />
-  </button>
-</div>
+                <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
+                  <FaCcVisa />
+                </button>
+                <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
+                  <FaCcMastercard />
+                </button>
+                <button type="button" className="text-2xl hover:text-white transition-colors cursor-default">
+                  <FaCcPaypal />
+                </button>
               </div>
             </div>
           </div>
