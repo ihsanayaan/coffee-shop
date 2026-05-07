@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiUser, FiEdit, FiSave, FiClock, FiMapPin, FiMail, FiPhone, FiLock, FiAward } from 'react-icons/fi';
+import { FiUser, FiEdit, FiSave, FiClock, FiLock, FiAward } from 'react-icons/fi';
 import { FaCoffee } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
