@@ -3,10 +3,12 @@ import { FiTrash2, FiPlus, FiMinus, FiShoppingCart, FiLock, FiArrowRight } from 
 import { FaCcVisa, FaCcMastercard, FaCcPaypal, FaGooglePay } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'react-i18next'; // RTL 
 
 const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
+  const { t } = useTranslation(); // RTL 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState('cart'); // 'cart', 'shipping', 'payment', 'complete'
+  const [checkoutStep, setCheckoutStep] = useState('cart');
   
   // Calculate totals
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -16,7 +18,6 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
 
   const handleCheckout = () => {
     setIsCheckingOut(true);
-    // Simulate processing delay
     setTimeout(() => {
       setCheckoutStep('shipping');
       setIsCheckingOut(false);
@@ -25,9 +26,8 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
 
   const handlePlaceOrder = () => {
     setIsCheckingOut(true);
-    // Simulate order processing
     setTimeout(() => {
-      toast.success('Order placed successfully!');
+      toast.success(t('orderSuccess'));
       clearCart();
       setCheckoutStep('complete');
       setIsCheckingOut(false);
@@ -37,11 +37,11 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8">
       <h2 className="text-2xl font-bold text-amber-900 mb-6 flex items-center">
-        <FiShoppingCart className="mr-2" /> 
-        {checkoutStep === 'cart' ? 'Your Cart' : 
-         checkoutStep === 'shipping' ? 'Shipping Information' :
-         checkoutStep === 'payment' ? 'Payment Method' :
-         'Order Confirmation'}
+        <FiShoppingCart className="ltr:mr-2 rtl:ml-2" /> 
+        {checkoutStep === 'cart' ? t('yourCart') : 
+         checkoutStep === 'shipping' ? t('shippingInfo') :
+         checkoutStep === 'payment' ? t('paymentMethod') :
+         t('orderConfirmation')}
       </h2>
 
       {checkoutStep === 'complete' ? (
@@ -51,26 +51,26 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">Order Confirmed!</h3>
-          <p className="text-gray-600 mb-6">Thank you for your purchase</p>
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">{t('orderConfirmed')}</h3>
+          <p className="text-gray-600 mb-6">{t('thankYou')}</p>
           <button
             onClick={() => setCheckoutStep('cart')}
             className="bg-amber-900 text-white px-6 py-3 rounded-lg hover:bg-amber-800 transition-colors"
           >
-            Continue Shopping
+            {t('continueShopping')}
           </button>
         </div>
       ) : cartItems.length === 0 ? (
         <div className="text-center py-12">
           <FiShoppingCart className="mx-auto text-4xl text-amber-300 mb-4" />
-          <p className="text-gray-500">Your cart is empty</p>
+          <p className="text-gray-500">{t('cartEmpty')}</p>
           <p className="text-sm text-gray-400 mt-2">
-            Add some delicious coffee from our menu!
+            {t('addCoffee')}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Changes based on checkout step */}
+          {/* Left Column */}
           <div className="lg:col-span-2">
             {checkoutStep === 'cart' ? (
               <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -78,21 +78,21 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
                   <div key={item.id} className="border-b border-gray-200 last:border-b-0 p-4 flex">
                     <div className="flex-grow">
                       <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-                      <p className="text-amber-900 font-medium">RS {item.price}</p>
+                      <p className="text-amber-900 font-medium">{t('currency')} {item.price}</p>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4">
                       <div className="flex items-center border border-amber-200 rounded-full">
                         <button
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="p-2 text-amber-900 hover:bg-amber-50 rounded-l-full"
+                          className="p-2 text-amber-900 hover:bg-amber-50 ltr:rounded-l-full rtl:rounded-r-full"
                         >
                           <FiMinus />
                         </button>
                         <span className="px-3 text-sm font-medium">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="p-2 text-amber-900 hover:bg-amber-50 rounded-r-full"
+                          className="p-2 text-amber-900 hover:bg-amber-50 ltr:rounded-r-full rtl:rounded-l-full"
                         >
                           <FiPlus />
                         </button>
@@ -110,42 +110,42 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
               </div>
             ) : checkoutStep === 'shipping' ? (
               <div className="bg-white rounded-lg shadow-md overflow-hidden p-6">
-                <h4 className="text-lg font-semibold mb-4">Shipping Address</h4>
+                <h4 className="text-lg font-semibold mb-4">{t('shippingAddress')}</h4>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" className="w-full p-2 border border-gray-300 rounded" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('fullName')}</label>
+                    <input type="text" className="w-full p-2 border border-gray-300 rounded ltr:text-left rtl:text-right" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                    <textarea className="w-full p-2 border border-gray-300 rounded" rows="3"></textarea>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('address')}</label>
+                    <textarea className="w-full p-2 border border-gray-300 rounded ltr:text-left rtl:text-right" rows="3"></textarea>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                      <input type="text" className="w-full p-2 border border-gray-300 rounded" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('city')}</label>
+                      <input type="text" className="w-full p-2 border border-gray-300 rounded ltr:text-left rtl:text-right" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
-                      <input type="text" className="w-full p-2 border border-gray-300 rounded" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('postalCode')}</label>
+                      <input type="text" className="w-full p-2 border border-gray-300 rounded ltr:text-left rtl:text-right" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                    <input type="tel" className="w-full p-2 border border-gray-300 rounded" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('phoneNumber')}</label>
+                    <input type="tel" className="w-full p-2 border border-gray-300 rounded ltr:text-left rtl:text-right" />
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-white rounded-lg shadow-md overflow-hidden p-6">
-                <h4 className="text-lg font-semibold mb-4">Payment Method</h4>
+                <h4 className="text-lg font-semibold mb-4">{t('paymentMethod')}</h4>
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
+                  <div className="flex items-center ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4 p-4 border border-gray-200 rounded-lg">
                     <input type="radio" id="credit-card" name="payment" defaultChecked />
                     <label htmlFor="credit-card" className="flex-grow">
                       <div className="flex justify-between items-center">
-                        <span>Credit/Debit Card</span>
-                        <div className="flex space-x-2">
+                        <span>{t('creditCard')}</span>
+                        <div className="flex ltr:space-x-2 rtl:space-x-reverse rtl:space-x-2">
                           <FaCcVisa className="text-2xl text-blue-900" />
                           <FaCcMastercard className="text-2xl text-red-600" />
                         </div>
@@ -153,7 +153,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
                     </label>
                   </div>
                   
-                  <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
+                  <div className="flex items-center ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4 p-4 border border-gray-200 rounded-lg">
                     <input type="radio" id="paypal" name="payment" />
                     <label htmlFor="paypal" className="flex-grow">
                       <div className="flex justify-between items-center">
@@ -163,7 +163,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
                     </label>
                   </div>
                   
-                  <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
+                  <div className="flex items-center ltr:space-x-4 rtl:space-x-reverse rtl:space-x-4 p-4 border border-gray-200 rounded-lg">
                     <input type="radio" id="google-pay" name="payment" />
                     <label htmlFor="google-pay" className="flex-grow">
                       <div className="flex justify-between items-center">
@@ -179,7 +179,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
 
           {/* Right Column - Order Summary */}
           <div className="bg-white rounded-lg shadow-md p-6 h-fit sticky top-4">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">Order Summary</h3>
+            <h3 className="text-lg font-bold text-gray-800 mb-4">{t('orderSummary')}</h3>
 
             <div className="space-y-3 mb-4">
               {cartItems.map((item) => (
@@ -188,7 +188,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
                     {item.name} × {item.quantity}
                   </span>
                   <span className="text-gray-800 font-medium">
-                    RS {item.price * item.quantity}
+                    {t('currency')} {item.price * item.quantity}
                   </span>
                 </div>
               ))}
@@ -196,25 +196,25 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
 
             <div className="border-t border-gray-200 pt-3 mb-3">
               <div className="flex justify-between text-sm py-1">
-                <span className="text-gray-600">Subtotal</span>
-                <span className="text-gray-800">RS {subtotal.toFixed(2)}</span>
+                <span className="text-gray-600">{t('subtotal')}</span>
+                <span className="text-gray-800">{t('currency')} {subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm py-1">
-                <span className="text-gray-600">Shipping</span>
+                <span className="text-gray-600">{t('shipping')}</span>
                 <span className="text-gray-800">
-                  {shippingFee === 0 ? 'FREE' : `RS ${shippingFee.toFixed(2)}`}
+                  {shippingFee === 0 ? t('free') : `${t('currency')} ${shippingFee.toFixed(2)}`}
                 </span>
               </div>
               <div className="flex justify-between text-sm py-1">
-                <span className="text-gray-600">Tax (5%)</span>
-                <span className="text-gray-800">RS {tax.toFixed(2)}</span>
+                <span className="text-gray-600">{t('tax')}</span>
+                <span className="text-gray-800">{t('currency')} {tax.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="border-t border-gray-200 pt-3 mb-6">
               <div className="flex justify-between font-bold text-lg">
-                <span>Total</span>
-                <span className="text-amber-900">RS {totalPrice.toFixed(2)}</span>
+                <span>{t('total')}</span>
+                <span className="text-amber-900">{t('currency')} {totalPrice.toFixed(2)}</span>
               </div>
             </div>
 
@@ -224,13 +224,11 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
                 disabled={isCheckingOut}
                 className={`w-full bg-gradient-to-r from-amber-700 to-amber-900 text-white py-3 rounded-lg hover:from-amber-800 hover:to-amber-900 transition-colors font-medium flex items-center justify-center ${isCheckingOut ? 'opacity-70' : ''}`}
               >
-                {isCheckingOut ? (
-                  'Processing...'
-                ) : (
+                {isCheckingOut ? t('processing') : (
                   <>
-                    <FiLock className="mr-2" />
-                    Proceed to Checkout
-                    <FiArrowRight className="ml-2" />
+                    <FiLock className="ltr:mr-2 rtl:ml-2" />
+                    {t('proceedToCheckout')}
+                    <FiArrowRight className="ltr:ml-2 rtl:mr-2 rtl:rotate-180" />
                   </>
                 )}
               </button>
@@ -239,7 +237,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
                 onClick={() => setCheckoutStep('payment')}
                 className="w-full bg-amber-900 text-white py-3 rounded-lg hover:bg-amber-800 transition-colors font-medium"
               >
-                Continue to Payment
+                {t('continueToPayment')}
               </button>
             ) : (
               <button
@@ -247,14 +245,14 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, clearCart }) => {
                 disabled={isCheckingOut}
                 className={`w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium ${isCheckingOut ? 'opacity-70' : ''}`}
               >
-                {isCheckingOut ? 'Placing Order...' : 'Place Order'}
+                {isCheckingOut ? t('placingOrder') : t('placeOrder')}
               </button>
             )}
 
             {checkoutStep === 'cart' && (
               <p className="text-xs text-gray-500 mt-4 flex items-center">
-                <FiLock className="mr-1" />
-                Secure SSL Encryption
+                <FiLock className="ltr:mr-1 rtl:ml-1" />
+                {t('secureSSL')}
               </p>
             )}
           </div>

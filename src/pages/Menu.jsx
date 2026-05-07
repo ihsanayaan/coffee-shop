@@ -2,38 +2,41 @@ import React, { useState } from 'react';
 import { FiCoffee, FiPlus, FiMinus, FiSearch, FiStar, FiShoppingCart } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'react-i18next';
 
 const Menu = ({ addToCart }) => {
-  const [menuCategories] = useState([
+  const { t } = useTranslation();
+
+  const menuCategories = [
     {
       id: 1,
-      name: 'Hot Coffee',
+      name: t('hotCoffee'),
       items: [
-        { id: 101, name: 'Espresso', price: 250, description: 'Strong black coffee shot', rating: 4.5, isPopular: true },
-        { id: 102, name: 'Americano', price: 280, description: 'Espresso with hot water', rating: 4.2 },
-        { id: 103, name: 'Cappuccino', price: 300, description: 'Espresso with steamed milk foam', rating: 4.7, isPopular: true },
-        { id: 104, name: 'Latte', price: 350, description: 'Espresso with lots of steamed milk', rating: 4.8, isPopular: true },
+        { id: 101, name: t('espresso'), price: 10, description: t('espressoDesc'), rating: 4.5, isPopular: true },
+        { id: 102, name: t('americano'), price: 15, description: t('americanoDesc'), rating: 4.2 },
+        { id: 103, name: t('cappuccino'), price: 20, description: t('cappuccinoDesc'), rating: 4.7, isPopular: true },
+        { id: 104, name: t('latte'), price: 30, description: t('latteDesc'), rating: 4.8, isPopular: true },
       ]
     },
     {
       id: 2,
-      name: 'Iced Coffee',
+      name: t('icedCoffee'),
       items: [
-        { id: 201, name: 'Iced Americano', price: 300, description: 'Chilled Americano over ice', rating: 4.3 },
-        { id: 202, name: 'Iced Latte', price: 350, description: 'Chilled latte over ice', rating: 4.6, isPopular: true },
-        { id: 203, name: 'Cold Brew', price: 320, description: 'Slow-steeped cold coffee', rating: 4.4 },
+        { id: 201, name: t('icedAmericano'), price: 15, description: t('icedAmericanoDesc'), rating: 4.3 },
+        { id: 202, name: t('icedLatte'), price: 20, description: t('icedLatteDesc'), rating: 4.6, isPopular: true },
+        { id: 203, name: t('coldBrew'), price: 30, description: t('coldBrewDesc'), rating: 4.4 },
       ]
     },
     {
       id: 3,
-      name: 'Specialty Drinks',
+      name: t('specialtyDrinks'),
       items: [
-        { id: 301, name: 'Caramel Macchiato', price: 380, description: 'Vanilla syrup with espresso and caramel', rating: 4.9, isPopular: true },
-        { id: 302, name: 'Mocha', price: 380, description: 'Chocolate with espresso and steamed milk', rating: 4.5 },
-        { id: 303, name: 'Hazelnut Latte', price: 370, description: 'Hazelnut flavored latte', rating: 4.3 },
+        { id: 301, name: t('caramelMacchiato'), price: 25, description: t('caramelMacchiatoDesc'), rating: 4.9, isPopular: true },
+        { id: 302, name: t('mocha'), price: 15, description: t('mochaDesc'), rating: 4.5 },
+        { id: 303, name: t('hazelnutLatte'), price: 30, description: t('hazelnutLatteDesc'), rating: 4.3 },
       ]
     }
-  ]);
+  ];
 
   const [quantities, setQuantities] = useState({});
   const [activeCategory, setActiveCategory] = useState(1);
@@ -41,15 +44,15 @@ const Menu = ({ addToCart }) => {
 
   // Filter items based on search query
   const filteredItems = menuCategories
-    .find(cat => cat.id === activeCategory)
-    ?.items.filter(item => 
+  .find(cat => cat.id === activeCategory)
+  ?.items.filter(item =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase())
     ) || [];
 
   const handleQuantityChange = (itemId, change) => {
     setQuantities(prev => ({
-      ...prev,
+    ...prev,
       [itemId]: Math.max(0, (prev[itemId] || 0) + change)
     }));
   };
@@ -57,24 +60,24 @@ const Menu = ({ addToCart }) => {
   const handleAddToCart = (item) => {
     const quantity = quantities[item.id] || 1;
     addToCart(item, quantity);
-    toast.success(`${quantity} ${item.name} added to cart!`);
-    setQuantities(prev => ({ ...prev, [item.id]: 0 }));
+    toast.success(`${quantity} ${item.name} ${t('addedToCart')}`);
+    setQuantities(prev => ({...prev, [item.id]: 0 }));
   };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <h2 className="text-2xl font-bold text-amber-900">
-          Our Menu
+          {t('ourMenu')}
         </h2>
-        
+
         {/* Search Bar */}
         <div className="relative w-full md:w-64">
-          <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <FiSearch className="absolute ltr:left-3 rtl:right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search drinks..."
-            className="pl-10 pr-4 py-2 w-full rounded-full border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-300"
+            placeholder={t('searchDrinks')}
+            className="ltr:pl-10 rtl:pr-10 ltr:pr-4 rtl:pl-4 py-2 w-full rounded-full border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-300 ltr:text-left rtl:text-right"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -83,7 +86,7 @@ const Menu = ({ addToCart }) => {
 
       {/* Category Tabs */}
       <div className="flex overflow-x-auto pb-4 mb-6 scrollbar-hide">
-        <div className="flex space-x-2">
+        <div className="flex ltr:space-x-2 rtl:space-x-reverse rtl:space-x-2">
           {menuCategories.map(category => (
             <button
               key={category.id}
@@ -93,7 +96,7 @@ const Menu = ({ addToCart }) => {
               }}
               className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
                 activeCategory === category.id
-                  ? 'bg-amber-900 text-white'
+                ? 'bg-amber-900 text-white'
                   : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
               }`}
             >
@@ -104,48 +107,48 @@ const Menu = ({ addToCart }) => {
       </div>
 
       {/* Menu Items */}
-      {filteredItems.length > 0 ? (
+      {filteredItems.length > 0? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map(item => (
             <div
               key={item.id}
               className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow relative flex flex-col ${
-                item.isPopular ? 'border-l-4 border-amber-500' : ''
+                item.isPopular? 'ltr:border-l-4 rtl:border-r-4 border-amber-500' : ''
               }`}
             >
               {/* Popular Tag */}
               {item.isPopular && (
-                <div className="absolute top-0 right-2 bg-amber-100 text-amber-900 px-2 py-1 rounded-full text-xs flex items-center z-10">
-                  <FiStar className="mr-1" /> Popular
+                <div className="absolute top-0 ltr:right-2 rtl:left-2 bg-amber-100 text-amber-900 px-2 py-1 rounded-full text-xs flex items-center z-10">
+                  <FiStar className="ltr:mr-1 rtl:ml-1" /> {t('popular')}
                 </div>
               )}
-              
+
               <div className="p-5 flex-grow flex flex-col">
                 {/* Item Info */}
                 <div className="flex justify-between items-start">
-                  <div className="flex-grow">
+                  <div className="flex-grow ltr:pr-2 rtl:pl-2">
                     <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
                     <p className="text-gray-600 text-sm mt-2 line-clamp-2">
                       {item.description}
                     </p>
                   </div>
                   <span className="text-amber-900 font-medium text-lg whitespace-nowrap">
-                    RS {item.price}
+                    {t('currency')} {item.price}
                   </span>
                 </div>
 
                 {/* Rating */}
                 <div className="flex justify-center my-4">
                   <div className="flex items-center bg-amber-50 px-3 py-1 rounded-full">
-                    <div className="flex text-amber-400 mr-2">
+                    <div className="flex text-amber-400 ltr:mr-2 rtl:ml-2">
                       {[...Array(5)].map((_, i) => (
                         <FiStar
                           key={i}
                           className={`${
                             i < Math.floor(item.rating)
-                              ? 'fill-current'
+                            ? 'fill-current'
                               : 'stroke-current'
-                          } ${i < item.rating ? 'text-amber-400' : 'text-gray-300'}`}
+                          } ${i < item.rating? 'text-amber-400' : 'text-gray-300'}`}
                           size={14}
                         />
                       ))}
@@ -162,7 +165,7 @@ const Menu = ({ addToCart }) => {
                     <div className="flex items-center border border-amber-200 rounded-full">
                       <button
                         onClick={() => handleQuantityChange(item.id, -1)}
-                        className="p-2 text-amber-900 hover:bg-amber-50 rounded-l-full"
+                        className="p-2 text-amber-900 hover:bg-amber-50 ltr:rounded-l-full rtl:rounded-r-full"
                         disabled={!quantities[item.id]}
                       >
                         <FiMinus />
@@ -172,7 +175,7 @@ const Menu = ({ addToCart }) => {
                       </span>
                       <button
                         onClick={() => handleQuantityChange(item.id, 1)}
-                        className="p-2 text-amber-900 hover:bg-amber-50 rounded-r-full"
+                        className="p-2 text-amber-900 hover:bg-amber-50 ltr:rounded-r-full rtl:rounded-l-full"
                       >
                         <FiPlus />
                       </button>
@@ -183,7 +186,7 @@ const Menu = ({ addToCart }) => {
                       onClick={() => handleAddToCart(item)}
                       disabled={quantities[item.id] === 0}
                     >
-                      Add to Cart
+                      {t('addToCartBtn')}
                     </button>
                   </div>
                 </div>
@@ -194,12 +197,12 @@ const Menu = ({ addToCart }) => {
       ) : (
         <div className="text-center py-12">
           <FiCoffee className="mx-auto text-4xl text-amber-300 mb-4" />
-          <p className="text-gray-500">No items found matching your search</p>
+          <p className="text-gray-500">{t('noItemsFound')}</p>
           <button
             onClick={() => setSearchQuery('')}
             className="mt-4 text-amber-900 hover:underline"
           >
-            Clear search
+            {t('clearSearch')}
           </button>
         </div>
       )}
