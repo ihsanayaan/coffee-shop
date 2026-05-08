@@ -99,11 +99,11 @@ function App() {
 
             <div className="flex items-center gap-4">
               <button
-                onClick={toggleLanguage}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-bold"
-              >
-                {lang === 'en'? 'العربية' : 'English'}
-              </button>
+  onClick={toggleLanguage}
+  className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-full text-sm font-semibold transition-colors border border-amber-500 shadow-sm"
+>
+  {lang === 'en'? 'العربية' : 'English'}
+</button>
 
               <Link to="/cart" className="text-2xl relative">
                 <FiShoppingCart />
