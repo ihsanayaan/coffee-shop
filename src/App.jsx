@@ -100,7 +100,7 @@ function App() {
             <div className="flex items-center gap-4 sm:gap-6">
              <button
   onClick={toggleLanguage}
-  className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-full text-sm font-semibold transition-colors border border-amber-500 shadow-sm ltr:ml-2 rtl:mr-2"
+  className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-full text-sm font-semibold transition-colors border border-amber-500 shadow-sm ltr:ml-6 rtl:mr-2"
 >
   {lang === 'en'? 'العربية' : 'English'}
 </button>
