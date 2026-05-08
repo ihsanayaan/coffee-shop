@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { FiShoppingCart, FiMenu, FiX, FiHome, FiCoffee, FiUser } from 'react-icons/fi';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; // Link add kiya
+import { FiHome, FiCoffee, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import Menu from './pages/Menu';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -21,13 +22,12 @@ function App() {
     const newLang = lang === 'en'? 'ar' : 'en';
     setLang(newLang);
     i18n.changeLanguage(newLang);
-   //localStorage.setItem('brewbean-lang', newLang);
   };
 
   useEffect(() => {
     document.documentElement.dir = lang === 'ar'? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
-  }, );
+  }, [lang]); // dependency fix ki
 
   // Load cart from localStorage
   useEffect(() => {
@@ -83,61 +83,15 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="bg-amber-900 text-white shadow-lg relative">
-          <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-2xl focus:outline-none"
-            >
-              {isMenuOpen? <FiX /> : <FiMenu />}
-            </button>
-            
-            <h1 className="text-3xl font-bold text-center md:text-4xl absolute left-1/2 transform -translate-x-1/2">
-              {t('brandName')}
-            </h1>
+        <Navbar 
+          lang={lang} 
+          toggleLanguage={toggleLanguage} 
+          t={t} 
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          totalCartItems={totalCartItems}
+        />
 
-            <div className="flex items-center gap-4 sm:gap-6">
-             <button
-  onClick={toggleLanguage}
-  className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-full text-sm font-semibold transition-colors border border-amber-500 shadow-sm ltr:ml-6 rtl:mr-2"
->
-  {lang === 'en'? 'العربية' : 'English'}
-</button>
-
-              <Link to="/cart" className="text-2xl relative">
-                <FiShoppingCart />
-                {totalCartItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {totalCartItems}
-                  </span>
-                )}
-              </Link>
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div className="md:hidden bg-amber-800 py-4 px-6">
-              <nav className="flex flex-col space-y-4">
-                <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center text-white">
-                  <FiHome className="ltr:mr-2 rtl:ml-2" /> {t('home')}
-                </Link>
-                <Link to="/menu" onClick={() => setIsMenuOpen(false)} className="flex items-center text-white">
-                  <FiCoffee className="ltr:mr-2 rtl:ml-2" /> {t('menu')}
-                </Link>
-                <Link to="/cart" onClick={() => setIsMenuOpen(false)} className="flex items-center text-white">
-                  <FiShoppingCart className="ltr:mr-2 rtl:ml-2" /> {t('cart')}
-                </Link>
-                <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="flex items-center text-white">
-                  <FiUser className="ltr:mr-2 rtl:ml-2" /> {t('profile')}
-                </Link>
-              </nav>
-            </div>
-          )}
-        </header>
-
-        {/* Main Content */}
         <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -147,7 +101,6 @@ function App() {
           </Routes>
         </main>
 
-        {/* Bottom Navigation */}
         <nav className="bg-white border-t border-gray-200 py-4 shadow-inner md:block hidden">
           <div className="container mx-auto flex justify-around max-w-md">
             <Link to="/" className="flex flex-col items-center text-amber-900 font-medium px-4 py-2 rounded-lg hover:bg-amber-100 transition-colors">

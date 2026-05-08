@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { FiCoffee, FiSearch, FiStar, FiMinus, FiPlus } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa'; // WhatsApp icon add kiya
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
 
 const Menu = ({ addToCart }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const whatsappNumber = "923444947537"; // Tera number without +
 
   const menuCategories = [
     {
@@ -43,15 +45,15 @@ const Menu = ({ addToCart }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredItems = menuCategories
-   .find(cat => cat.id === activeCategory)
-   ?.items.filter(item =>
+  .find(cat => cat.id === activeCategory)
+  ?.items.filter(item =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase())
     ) || [];
 
   const handleQuantityChange = (itemId, change) => {
     setQuantities(prev => ({
-     ...prev,
+    ...prev,
       [itemId]: Math.max(0, (prev[itemId] || 0) + change)
     }));
   };
@@ -61,6 +63,17 @@ const Menu = ({ addToCart }) => {
     addToCart(item, quantity);
     toast.success(`${quantity} ${item.name} ${t('addedToCart')}`);
     setQuantities(prev => ({...prev, [item.id]: 0 }));
+  };
+
+  // WhatsApp message generator
+  const getWhatsAppLink = (item) => {
+    const qty = quantities[item.id] || 1;
+    const total = item.price * qty;
+    const message = i18n.language === 'ar'
+     ? `مرحبا، أريد طلب:\n${qty} x ${item.name}\nالسعر: ${total} ${t('currency')}\nمن BrewBean ☕`
+      : `Hello, I want to order:\n${qty} x ${item.name}\nPrice: ${total} ${t('currency')}\nFrom BrewBean ☕`;
+
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   };
 
   return (
@@ -93,7 +106,7 @@ const Menu = ({ addToCart }) => {
               }}
               className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
                 activeCategory === category.id
-                 ? 'bg-amber-900 text-white'
+                ? 'bg-amber-900 text-white'
                   : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
               }`}
             >
@@ -127,7 +140,7 @@ const Menu = ({ addToCart }) => {
                     </p>
                   </div>
                   <span className="text-amber-900 font-medium text-lg whitespace-nowrap">
-                    {t('currency')} {item.price}
+                    {item.price} {t('currency')}
                   </span>
                 </div>
 
@@ -139,7 +152,7 @@ const Menu = ({ addToCart }) => {
                           key={i}
                           className={`${
                             i < Math.floor(item.rating)
-                             ? 'fill-current'
+                            ? 'fill-current'
                               : 'stroke-current'
                           } ${i < item.rating? 'text-amber-400' : 'text-gray-300'}`}
                           size={14}
@@ -151,8 +164,7 @@ const Menu = ({ addToCart }) => {
                     </span>
                   </div>
                 </div>
-
-                <div className="mt-auto">
+                <div className="mt-auto space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center border border-amber-200 rounded-full">
                       <button
@@ -172,7 +184,6 @@ const Menu = ({ addToCart }) => {
                         <FiPlus />
                       </button>
                     </div>
-
                     <button
                       className="bg-amber-900 text-white px-4 py-2 rounded-full hover:bg-amber-800 transition-colors text-sm disabled:opacity-50"
                       onClick={() => handleAddToCart(item)}
@@ -180,6 +191,18 @@ const Menu = ({ addToCart }) => {
                     >
                       {t('addToCartBtn')}
                     </button>
+                     <div className="flex items-center justify-between gap-2">
+    <a
+      href={getWhatsAppLink(item)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-green-300 hover:bg-green-500 text-white p-2.5 rounded-full transition-all hover:scale-110 shadow-sm"
+      title={t('orderWhatsApp')}
+      aria-label={t('orderWhatsApp')}
+    >
+      <FaWhatsapp className="text-xl" />
+    </a>
+                   </div>
                   </div>
                 </div>
               </div>
