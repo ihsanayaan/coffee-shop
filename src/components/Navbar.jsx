@@ -9,39 +9,43 @@ export default function Navbar({ lang, toggleLanguage, t, isMenuOpen, setIsMenuO
     >
       <div className="container mx-auto px-4 py-6 flex items-center justify-between">
         
-        {/* Left: Hamburger - Mobile only */}
-        <button 
-          onClick={() => setIsMenuOpen(!isMenuOpen)} 
-          className="md:hidden text-2xl focus:outline-none"
-        >
-          {isMenuOpen ? <FiX /> : <FiMenu />}
-        </button>
-
-        {/* Logo - Desktop pe left, Mobile pe center */}
-        <Link 
-          to="/" 
-          className="text-2xl md:text-3xl font-bold absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
-        >
-          {t('brandName')}
-        </Link>
-
-        {/* Right: Links + Lang + Cart */}
-        <div className="flex items-center gap-4 sm:gap-6">
+        {/* Left Side: Hamburger + Logo + Desktop Links */}
+        <div className="flex items-center gap-8">
           
-          {/* Desktop Links - Wapas right side pe */}
+          {/* Hamburger - Mobile only */}
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            className="md:hidden text-2xl focus:outline-none"
+          >
+            {isMenuOpen ? <FiX /> : <FiMenu />}
+          </button>
+
+          {/* Logo - BrewBean */}
+          <Link 
+            to="/" 
+            className="text-2xl md:text-3xl font-bold"
+          >
+            {t('brandName')}
+          </Link>
+
+          {/* Desktop Links - BrewBean ke sath */}
           <div className="hidden md:flex items-center gap-6">
             <Link to="/" className="hover:text-amber-200">{t('home')}</Link>
             <Link to="/menu" className="hover:text-amber-200">{t('menu')}</Link>
             <Link to="/cart" className="hover:text-amber-200">{t('cart')}</Link>
             <Link to="/profile" className="hover:text-amber-200">{t('profile')}</Link>
           </div>
+        </div>
+
+        {/* Right Side: Lang + Cart */}
+        <div className="flex items-center gap-3">
           
-          {/* Language Button - Mobile + Desktop, Full Text */}
+          {/* Language Button - Cart ke sath */}
           <button
             onClick={toggleLanguage}
             className="flex items-center gap-1 bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 md:px-4 md:py-1.5 rounded-full text-xs md:text-sm font-semibold border border-amber-500 transition-all"
           >
-            <FiGlobe size={16} />
+            <FiGlobe size={16} className="hidden sm:block" />
             <span>{lang === 'en' ? 'العربية' : 'English'}</span>
           </button>
 
@@ -57,7 +61,7 @@ export default function Navbar({ lang, toggleLanguage, t, isMenuOpen, setIsMenuO
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu - Lang button nahi hai */}
+      {/* Mobile Dropdown Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-amber-800 py-4 px-6 space-y-3 border-t border-amber-700">
           <Link 
