@@ -1,9 +1,12 @@
-import { FiMenu, FiShoppingCart, FiX } from "react-icons/fi";
+import { FiMenu, FiShoppingCart, FiX, FiGlobe } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 export default function Navbar({ lang, toggleLanguage, t, isMenuOpen, setIsMenuOpen, totalCartItems }) {
   return (
-    <header className="bg-amber-900 text-white shadow-lg sticky top-0 z-50">
+    <header 
+      className="bg-amber-900 text-white shadow-lg sticky top-0 z-50" 
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
+    >
       <div className="container mx-auto px-4 py-6 flex items-center justify-between">
         
         {/* Left: Hamburger - Mobile only */}
@@ -11,10 +14,10 @@ export default function Navbar({ lang, toggleLanguage, t, isMenuOpen, setIsMenuO
           onClick={() => setIsMenuOpen(!isMenuOpen)} 
           className="md:hidden text-2xl focus:outline-none"
         >
-          {isMenuOpen? <FiX /> : <FiMenu />}
+          {isMenuOpen ? <FiX /> : <FiMenu />}
         </button>
 
-        {/* Center: Logo - Always Center */}
+        {/* Logo - Desktop pe left, Mobile pe center */}
         <Link 
           to="/" 
           className="text-2xl md:text-3xl font-bold absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
@@ -22,22 +25,24 @@ export default function Navbar({ lang, toggleLanguage, t, isMenuOpen, setIsMenuO
           {t('brandName')}
         </Link>
 
-        {/* Right: Desktop Links + Lang + Cart */}
+        {/* Right: Links + Lang + Cart */}
         <div className="flex items-center gap-4 sm:gap-6">
-          {/* Desktop Links */}
+          
+          {/* Desktop Links - Wapas right side pe */}
           <div className="hidden md:flex items-center gap-6">
             <Link to="/" className="hover:text-amber-200">{t('home')}</Link>
             <Link to="/menu" className="hover:text-amber-200">{t('menu')}</Link>
-            <Link to="/Cart" className="hover:text-amber-200">{t('cart')}</Link>
-            <Link to="/Profile" className="hover:text-amber-200">{t('profile')}</Link>
+            <Link to="/cart" className="hover:text-amber-200">{t('cart')}</Link>
+            <Link to="/profile" className="hover:text-amber-200">{t('profile')}</Link>
           </div>
           
-          {/* Language Button - Desktop Only */}
+          {/* Language Button - Mobile + Desktop, Full Text */}
           <button
             onClick={toggleLanguage}
-            className="hidden md:block bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-sm font-semibold border border-amber-500 transition-all"
+            className="flex items-center gap-1 bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 md:px-4 md:py-1.5 rounded-full text-xs md:text-sm font-semibold border border-amber-500 transition-all"
           >
-            {lang === 'en'? 'العربية' : 'English'}
+            <FiGlobe size={16} />
+            <span>{lang === 'en' ? 'العربية' : 'English'}</span>
           </button>
 
           {/* Cart Icon */}
@@ -52,7 +57,7 @@ export default function Navbar({ lang, toggleLanguage, t, isMenuOpen, setIsMenuO
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Dropdown Menu - Lang button nahi hai */}
       {isMenuOpen && (
         <div className="md:hidden bg-amber-800 py-4 px-6 space-y-3 border-t border-amber-700">
           <Link 
@@ -83,17 +88,6 @@ export default function Navbar({ lang, toggleLanguage, t, isMenuOpen, setIsMenuO
           >
             {t('profile')}
           </Link>
-          
-          {/* Language Button - Mobile Full Width */}
-          <button
-            onClick={() => {
-              toggleLanguage();
-              setIsMenuOpen(false);
-            }}
-            className="w-full bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-full text-sm font-semibold border border-amber-500 mt-2"
-          >
-            {lang === 'en'? 'تغيير إلى العربية' : 'Switch to English'}
-          </button>
         </div>
       )}
     </header>
